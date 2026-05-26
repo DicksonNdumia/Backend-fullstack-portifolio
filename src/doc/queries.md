@@ -1,6 +1,7 @@
 # Database Schema Queries Documentation (Drizzle ORM)
 
 ## Overview
+
 This document describes the database schema, tables, and relationships for the system built using Drizzle ORM with PostgreSQL.
 
 ---
@@ -8,6 +9,7 @@ This document describes the database schema, tables, and relationships for the s
 ## Tables
 
 ### 1. Users
+
 **Table:** `users`
 
 - id (serial, PK)
@@ -19,12 +21,14 @@ This document describes the database schema, tables, and relationships for the s
 - updatedAt (timestamp)
 
 **Indexes:**
+
 - email_idx on email
 - role_idx on role
 
 ---
 
 ### 2. Tools
+
 **Table:** `tools`
 
 - id (serial, PK)
@@ -37,6 +41,7 @@ This document describes the database schema, tables, and relationships for the s
 ---
 
 ### 3. Projects
+
 **Table:** `projects`
 
 - id (serial, PK)
@@ -56,6 +61,7 @@ This document describes the database schema, tables, and relationships for the s
 ---
 
 ### 4. Dev Data
+
 **Table:** `devData`
 
 - id (serial, PK)
@@ -71,6 +77,7 @@ This document describes the database schema, tables, and relationships for the s
 ---
 
 ### 5. Languages
+
 **Table:** `languages`
 
 - id (serial, PK)
@@ -83,6 +90,7 @@ This document describes the database schema, tables, and relationships for the s
 ---
 
 ### 6. Blogs
+
 **Table:** `blogs`
 
 - id (serial, PK)
@@ -95,6 +103,7 @@ This document describes the database schema, tables, and relationships for the s
 ---
 
 ### 7. Blog Comments
+
 **Table:** `blogComments`
 
 - id (serial, PK)
@@ -107,6 +116,7 @@ This document describes the database schema, tables, and relationships for the s
 ---
 
 ### 8. Project Reviews
+
 **Table:** `projectReviews`
 
 - id (serial, PK)
@@ -118,6 +128,7 @@ This document describes the database schema, tables, and relationships for the s
 - updatedAt
 
 **Indexes:**
+
 - review_user_idx on userId
 - review_project_idx on projectId
 
@@ -126,6 +137,7 @@ This document describes the database schema, tables, and relationships for the s
 ## Relationships
 
 ### Users
+
 - has one DevData
 - has many Projects
 - has many Blogs
@@ -133,27 +145,33 @@ This document describes the database schema, tables, and relationships for the s
 - has many ProjectReviews
 
 ### Projects
+
 - belongs to Tool
 - belongs to Language
 - belongs to User
 - has many ProjectReviews
 
 ### Blogs
+
 - belongs to User
 - has many BlogComments
 
 ### BlogComments
+
 - belongs to User
 - belongs to Blog
 
 ### ProjectReviews
+
 - belongs to User
 - belongs to Project
 
 ### Tools
+
 - has many Projects
 
 ### Languages
+
 - has many Projects
 
 ---
@@ -161,6 +179,7 @@ This document describes the database schema, tables, and relationships for the s
 ## Example Queries (Drizzle ORM)
 
 ### Get user with projects
+
 ```ts
 db.query.userTable.findMany({
   with: {
@@ -170,6 +189,7 @@ db.query.userTable.findMany({
 ```
 
 ### Get project with reviews and tool
+
 ```ts
 db.query.projectTable.findMany({
   with: {
@@ -180,21 +200,23 @@ db.query.projectTable.findMany({
 ```
 
 ### Create a new project
+
 ```ts
 await db.insert(projectTable).values({
-  name: "My App",
-  description: "Cool project",
-  shortDescription: "Cool app",
-  demo: "url",
-  github: "url",
+  name: 'My App',
+  description: 'Cool project',
+  shortDescription: 'Cool app',
+  demo: 'url',
+  github: 'url',
   toolsId: 1,
   languageId: 1,
-  features: "fast, scalable",
-  hostingPlatforms: "Vercel",
+  features: 'fast, scalable',
+  hostingPlatforms: 'Vercel',
 })
 ```
 
 ### Get blog with comments
+
 ```ts
 db.query.blogData.findMany({
   with: {
