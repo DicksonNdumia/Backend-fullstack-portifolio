@@ -1,5 +1,5 @@
 import type { Request } from 'express'
-import {userTable} from "../../schema/shema.ts";
+import { userTable } from '../../schema/shema.ts'
 
 /**
  * User type defining structure of a user record in PostgreSQL
@@ -19,5 +19,5 @@ export interface User {
  * Custom Express Request Type to include `user` object
  */
 export interface UserRequest extends Request {
-    user?: typeof userTable.$inferSelect;
+  user?: typeof userTable.$inferSelect
 }
