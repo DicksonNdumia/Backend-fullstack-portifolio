@@ -22,7 +22,7 @@ export const devDataSchema = z.object({
   name: z.string(),
   email: z.string(),
   phone: z.string(),
-  userId: z.int,
+  userId: z.int(),
   dateOfBirth: isoDateString,
   cv: z.string(),
 })
