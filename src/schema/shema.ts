@@ -10,6 +10,7 @@ import {
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
+// Enums
 export const userRole = pgEnum('role', ['admin', 'user'])
 export const languageEnums = pgEnum('proficiency', [
   'beginner',
@@ -17,6 +18,7 @@ export const languageEnums = pgEnum('proficiency', [
   'expert',
 ])
 
+//My shcemas / Tables
 export const userTable = pgTable(
   'users',
   {
@@ -33,7 +35,6 @@ export const userTable = pgTable(
     roleIndex: index('role_idx').on(table.role),
   }),
 )
-
 export const toolsTable = pgTable('tools', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).unique().notNull(),
