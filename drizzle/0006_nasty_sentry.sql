@@ -1,0 +1,1 @@
+ALTER TABLE "devData" RENAME COLUMN "createdAt" TO "dateOfBirth";
