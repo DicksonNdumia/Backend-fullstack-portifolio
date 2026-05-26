@@ -6,6 +6,7 @@ import { db } from '../../config/config.db.ts'
 
 export const protect = asyncHandler(
   async (req: UserRequest, res: Response, next: NextFunction) => {
+    //declare token
     let token
 
     // 1. Get token from Authorization header
@@ -64,13 +65,25 @@ export const protect = asyncHandler(
 )
 
 export const admin = (req: UserRequest, res: Response, next: NextFunction) => {
-    if (!req.user) {
-        return res.status(401).json({ message: "Not authenticated" });
-    }
+  if (!req.user) {
+    return res.status(401).json({ message: 'Not authenticated' })
+  }
 
-    if (req.user.role !== "admin") {
-        return res.status(403).json({ message: "Admin access only" });
-    }
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access only' })
+  }
 
-    next();
-};
+  next()
+}
+
+export const user = (req: UserRequest, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Not authenticated' })
+  }
+
+  if (req.user.role !== 'user') {
+    return res.status(403).json({ message: 'User access only' })
+  }
+
+  next()
+}
