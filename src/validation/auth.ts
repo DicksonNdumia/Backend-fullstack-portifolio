@@ -8,7 +8,7 @@ export const role = {
 
 export const UserSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
-  email: z.string().min(10, 'Invalid email format').max(255),
+  email: z.email('Invalid email format').max(255),
   // Matches the exact tuple elements defined in your pgEnum
   role: z.enum(['admin', 'user']).default('user'),
   password: z
@@ -22,7 +22,7 @@ export const UserSchema = z.object({
 })
 
 export const listUserSchema = z.object({
-  limit: z.coerce.number().int().max(100).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
 })
 
 // Add this below your UserSchema

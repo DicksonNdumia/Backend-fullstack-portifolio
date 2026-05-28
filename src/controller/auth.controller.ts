@@ -36,7 +36,7 @@ export const register = asyncHandler(
       console.log('Fourth')
 
       if (existingUsers.length > 0) {
-        res.status(400).json({
+        res.status(409).json({
           errors: 'User Already Exists please login',
         })
         return
@@ -128,18 +128,18 @@ export const login = asyncHandler(
 
 export const logoutUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const isProduction = process.env.NODE_ENV === 'production'
+      const isSecureCookie = process.env.NODE_ENV !== 'development';
 
     res.cookie('access_token', '', {
       httpOnly: true,
-      secure: isProduction,
+      secure: isSecureCookie,
       sameSite: 'strict',
       expires: new Date(0),
     })
 
     res.cookie('refresh_token', '', {
       httpOnly: true,
-      secure: isProduction,
+      secure: isSecureCookie,
       sameSite: 'strict',
       expires: new Date(0),
     })
