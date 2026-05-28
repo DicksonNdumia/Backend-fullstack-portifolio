@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import type { Response } from 'express'
+import type { UserRequest } from '../types/userRequest.ts'
 
 export const generateToken = (res: Response, userId: number, role: string) => {
   const jwtSecret = process.env.JWT_SECRET
@@ -31,18 +32,3 @@ export const generateToken = (res: Response, userId: number, role: string) => {
     maxAge: 30 * 24 * 60 * 60 * 1000,
   })
 }
-
-//refresh Token Controller
-// const { token } = req.body;
-
-//   if (!token || !refreshTokens.includes(token)) {
-//     return res.status(403).json({ error: 'Invalid refresh token' });
-//   }
-
-//   try {
-//     const user = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-//     const accessToken = generateAccessToken({ id: user.id });
-//     res.json({ accessToken });
-//   } catch (error) {
-//     res.status(403).json({ error: 'Invalid refresh token' });
-//   }

@@ -1,18 +1,9 @@
 import { z } from 'zod'
 
-export const listUserSchema = z.object({
-  limit: z.coerce.number().int().max(100).optional(),
-})
 export const listDevDataSchema = z.object({
   limit: z.coerce.number().int().max(100).optional(),
 })
 
-export const UserSchema = z.object({
-  name: z.string(),
-  email: z.string(),
-  password: z.string(),
-  role: z.string(),
-})
 export const isoDateString = z
   .string()
   .refine((val) => !isNaN(Date.parse(val)), {

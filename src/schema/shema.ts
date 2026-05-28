@@ -18,7 +18,7 @@ export const languageEnums = pgEnum('proficiency', [
   'expert',
 ])
 
-//My shcemas / Tables
+//My schema / Tables
 export const userTable = pgTable(
   'users',
   {
