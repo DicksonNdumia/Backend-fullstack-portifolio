@@ -17,12 +17,9 @@ app.use(logger)
 
 app.use(limiter)
 
-
 app.use('/api/auth', authRoutes)
 
 app.use(errorHandler)
-
-
 
 app.listen(PORT, () => {
   console.log(`App is listening on port: ${PORT} ❤️`)
