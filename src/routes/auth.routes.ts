@@ -1,7 +1,7 @@
 import express from 'express'
-import {login, logoutUser, register} from '../controller/auth.controller.ts'
+import { login, logoutUser, register } from '../controller/auth.controller.ts'
 
-const router = express()
+const router = express.Router()
 
 router.post('/register', register)
 router.post('/login', login)

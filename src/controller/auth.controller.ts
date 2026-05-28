@@ -127,28 +127,25 @@ export const login = asyncHandler(
 )
 
 export const logoutUser = asyncHandler(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const isProduction = process.env.NODE_ENV === 'production';
+  async (req: Request, res: Response, next: NextFunction) => {
+    const isProduction = process.env.NODE_ENV === 'production'
 
+    res.cookie('access_token', '', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict',
+      expires: new Date(0),
+    })
 
-        res.cookie('access_token', '', {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: 'strict',
-            expires: new Date(0),
-        });
+    res.cookie('refresh_token', '', {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict',
+      expires: new Date(0),
+    })
 
-
-        res.cookie('refresh_token', '', {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: 'strict',
-            expires: new Date(0),
-        });
-
-        res.status(200).json({
-            message: 'User logged out successfully'
-        });
-    }
-);
-
+    res.status(200).json({
+      message: 'User logged out successfully',
+    })
+  },
+)
