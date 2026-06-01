@@ -1,0 +1,1 @@
+ALTER TABLE "devData" DROP COLUMN "created_at";

@@ -1,0 +1,1 @@
+ALTER TABLE "devData" RENAME COLUMN "created_at" TO "date_creates";
