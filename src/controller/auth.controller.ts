@@ -128,7 +128,7 @@ export const login = asyncHandler(
 
 export const logoutUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-      const isSecureCookie = process.env.NODE_ENV !== 'development';
+    const isSecureCookie = process.env.NODE_ENV !== 'development'
 
     res.cookie('access_token', '', {
       httpOnly: true,
