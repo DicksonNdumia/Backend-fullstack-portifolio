@@ -9,7 +9,7 @@ export const role = {
 export const UserSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   email: z.email('Invalid email format').max(255),
-  // Matches the exact tuple elements defined in your pgEnum
+
   role: z.enum(['admin', 'user']).default('user'),
   password: z
     .string()
