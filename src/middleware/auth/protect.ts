@@ -7,82 +7,62 @@ import {
   InvalidTokenError,
   UserNotFound,
   MissingToken,
+  UnauthorizedError,
+  ForbiddenError,
 } from '../../error/customError.ts'
 
 export const protect = asyncHandler(
-  async (req: UserRequest, res: Response, next: NextFunction) => {
-    //declare token
-    let token
+  async (req: UserRequest, _res: Response, next: NextFunction) => {
+    const token = req.headers.authorization?.startsWith('Bearer ')
+      ? req.headers.authorization.split(' ')[1]
+      : req.cookies?.access_token
 
-    // 1. Get token from Authorization header
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
-    ) {
-      token = req.headers.authorization.split(' ')[1]
-    }
-
-    // 2. Fallback to cookies
-    if (!token && req.cookies?.access_token) {
-      token = req.cookies.access_token
-    }
-
-    // 3. No token = reject
     if (!token) {
-      throw new MissingToken('Missing Token')
+      throw new MissingToken()
+    }
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined')
+    }
+
+    let decoded: {
+      userId: number
+      role: string
     }
 
     try {
-      // 4. Verify JWT
-      if (!process.env.JWT_SECRET) {
-        throw new Error('JWT_SECRET is not defined')
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
+      decoded = jwt.verify(token, process.env.JWT_SECRET) as {
         userId: number
         role: string
       }
-
-      // 5. Get user from DB
-      const user = await db.query.userTable.findFirst({
-        where: (users, { eq }) => eq(users.id, decoded.userId),
-      })
-
-      // 6. If user not found
-      if (!user) {
-        throw new UserNotFound('User Not Found')
-      }
-
-      // 7. Attach user to request
-      req.user = user
-
-      next()
-    } catch (error) {
-      throw new InvalidTokenError('Error on The Token')
+    } catch {
+      throw new InvalidTokenError()
     }
+
+    const user = await db.query.userTable.findFirst({
+      where: (users, { eq }) => eq(users.id, decoded.userId),
+    })
+
+    if (!user) {
+      throw new UserNotFound()
+    }
+
+    req.user = user
+
+    next()
   },
 )
 
-export const admin = (req: UserRequest, res: Response, next: NextFunction) => {
-  if (!req.user) {
-    return res.status(401).json({ message: 'Not authenticated' })
+export const authorize =
+  (...roles: string[]) =>
+  (req: UserRequest, _res: Response, next: NextFunction) => {
+    if (!req.user) {
+      throw new UnauthorizedError('Not authenticated')
+    }
+
+    if (!roles.includes(req.user.role)) {
+      throw new ForbiddenError('Access denied')
+    }
+
+    next()
   }
-
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Admin access only' })
-  }
-
-  next()
-}
-
-export const user = (req: UserRequest, res: Response, next: NextFunction) => {
-  if (!req.user) {
-    return res.status(401).json({ message: 'Not authenticated' })
-  }
-
-  if (req.user.role !== 'user') {
-    return res.status(403).json({ message: 'User access only' })
-  }
-
-  next()
-}

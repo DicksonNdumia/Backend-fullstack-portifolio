@@ -68,3 +68,9 @@ export class MissingToken extends CustomError {
     super(message, 'INVALID_TOKEN OR MissingToken', 403)
   }
 }
+
+export class ForbiddenError extends CustomError {
+  constructor(message = 'Aunaothorized to access The Url.') {
+    super(message, 'ACCESS_DENIED', 403)
+  }
+}
