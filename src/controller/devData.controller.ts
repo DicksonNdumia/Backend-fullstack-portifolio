@@ -62,7 +62,7 @@ export const devDetails = catchErrors(async (req: Request, res: Response) => {
       createdAt: devData.createdAt,
     })
 
-  res.respond(createdDevProfile)
+  res.respond({ createdDevProfile })
 })
 
 export const getDevDetails = catchErrors(

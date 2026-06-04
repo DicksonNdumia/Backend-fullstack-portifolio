@@ -3,6 +3,11 @@ import type { NextFunction, Response } from 'express'
 import { asyncHandler } from '../../utils/helper/asyncHandler.ts'
 import type { UserRequest } from '../../utils/types/userRequest.ts'
 import { db } from '../../config/config.db.ts'
+import {
+  InvalidTokenError,
+  UserNotFound,
+  MissingToken,
+} from '../../error/customError.ts'
 
 export const protect = asyncHandler(
   async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -24,9 +29,7 @@ export const protect = asyncHandler(
 
     // 3. No token = reject
     if (!token) {
-      return res.status(401).json({
-        message: 'Not authorized, no token',
-      })
+      throw new MissingToken('Missing Token')
     }
 
     try {
@@ -47,9 +50,7 @@ export const protect = asyncHandler(
 
       // 6. If user not found
       if (!user) {
-        return res.status(401).json({
-          message: 'User not found',
-        })
+        throw new UserNotFound('User Not Found')
       }
 
       // 7. Attach user to request
@@ -57,9 +58,7 @@ export const protect = asyncHandler(
 
       next()
     } catch (error) {
-      return res.status(401).json({
-        message: 'Not authorized, token failed',
-      })
+      throw new InvalidTokenError('Error on The Token')
     }
   },
 )

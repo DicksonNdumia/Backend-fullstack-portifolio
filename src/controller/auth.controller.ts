@@ -52,7 +52,7 @@ export const register = catchErrors(async (req: Request, res: Response) => {
 
   generateToken(res, newUser.id, newUser.role)
 
-  res.respond(newUser)
+  res.respond({ newUser })
 })
 
 export const login = catchErrors(async (req: Request, res: Response) => {
@@ -76,7 +76,7 @@ export const login = catchErrors(async (req: Request, res: Response) => {
 
   generateToken(res, user.id, user.role)
 
-  res.respond(user)
+  res.respond({ user })
 })
 
 export const logoutUser = catchErrors(async (_req: Request, res: Response) => {

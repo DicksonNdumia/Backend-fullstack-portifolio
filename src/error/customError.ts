@@ -33,6 +33,11 @@ export class UserAlreadyExistsError extends CustomError {
     super('User already exists. Please login.', 'USER_ALREADY_EXISTS', 409)
   }
 }
+export class UserNotFound extends CustomError {
+  constructor(message = 'User Not Found') {
+    super(message, 'USER_MISSing', 400)
+  }
+}
 
 export class UnauthorizedError extends CustomError {
   constructor(message = 'Invalid email or password') {
@@ -55,5 +60,11 @@ export class NotFoundError extends CustomError {
 export class ConflictError extends CustomError {
   constructor(message = 'Resource already exists') {
     super(message, 'CONFLICT', 409)
+  }
+}
+
+export class MissingToken extends CustomError {
+  constructor(message = 'Authentication token is invalid/ Missing.') {
+    super(message, 'INVALID_TOKEN OR MissingToken', 403)
   }
 }
