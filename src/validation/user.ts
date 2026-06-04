@@ -4,6 +4,8 @@ export const listDevDataSchema = z.object({
   limit: z.coerce.number().int().max(100).optional(),
 })
 
+export const idSchema = z.coerce.number().int().positive()
+
 
 
 export const devDataSchema = z.object({

@@ -1,9 +1,9 @@
 import type { NextFunction, Response, Request } from 'express'
 
-import { devDataSchema} from '../validation/user.ts'
+import {devDataSchema, idSchema, listDevDataSchema} from '../validation/user.ts'
 import { db } from '../config/config.db.ts'
 import { devData, userTable } from '../schema/shema.ts'
-import { eq } from 'drizzle-orm'
+import {desc, eq} from 'drizzle-orm'
 import {asyncHandler} from "../utils/helper/asyncHandler.ts";
 const MAX_LIMIT = 100
 
@@ -97,5 +97,51 @@ export const devDetails = asyncHandler(async (
     }
 })
 
+export const getDevDetails = asyncHandler(async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+)=> {
+    const parsedId = idSchema.safeParse(req.params.id)
 
+    if (!parsedId.success) {
+        return res.status(400).json({
+            error: 'Invalid ID',
+        })
+    }
+
+    const parsedQuery = listDevDataSchema.safeParse(req.query)
+
+    if (!parsedQuery.success) {
+        return res.status(400).json({
+            error: 'Invalid query parameters',
+            details: parsedQuery.error,
+        })
+    }
+
+    const id = parsedId.data
+    const limit = Math.min(parsedQuery.data.limit ?? 50, MAX_LIMIT)
+
+
+    try {
+        const [user] = await db.select().from(devData).where(eq(devData.id,id))
+
+        if(!user) {
+            res.status(404).json({
+                message: "Dev Data was not found"
+            })
+            return;
+        }
+
+        res.status(200).json({
+            message: "Successfully fetched dev details",
+            data: user,
+        })
+
+    }
+    catch (e) {
+        console.error(e)
+        next(e)
+    }
+})
 
