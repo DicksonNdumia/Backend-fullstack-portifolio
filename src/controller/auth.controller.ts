@@ -1,151 +1,98 @@
-import type { NextFunction, Response, Request } from 'express'
+import type { Response, Request } from 'express'
 import { LoginSchema, UserSchema } from '../validation/auth.ts'
-import { asyncHandler } from '../utils/helper/asyncHandler.ts'
+import {
+  UnauthorizedError,
+  UserAlreadyExistsError,
+  DatabaseError,
+} from '../error/customError.ts'
 import { db } from '../config/config.db.ts'
 import bcrypt from 'bcryptjs'
 import { userTable } from '../schema/shema.ts'
-
+import { catchErrors } from '../error/errorHandler.ts'
 import { eq } from 'drizzle-orm'
 import { generateToken } from '../utils/helper/generateToken.ts'
+import { validateOrThrow } from '../utils/helper/validate.ts'
 
-export const register = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    console.log('Code Start!')
-    const parsed = await UserSchema.safeParseAsync(req.body)
-    console.log('Second')
+export const register = catchErrors(async (req: Request, res: Response) => {
+  const {
+    name,
+    email,
+    password: hashedPassword,
+    role,
+  } = await validateOrThrow(UserSchema, req.body)
 
-    if (!parsed.success) {
-      res.status(400).json({
-        errors: 'Invalid Payload',
-        details: parsed.error,
-      })
-      return
-    }
-    console.log('Third')
+  const existingUsers = await db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.email, email))
+    .limit(1)
 
-    try {
-      const { name, email, password: hashedPassword, role } = parsed.data
-      console.log('Code Reached')
+  if (existingUsers.length > 0) {
+    throw new UserAlreadyExistsError()
+  }
 
-      const existingUsers = await db
-        .select()
-        .from(userTable)
-        .where(eq(userTable.email, email))
-        .limit(1)
-
-      console.log('Fourth')
-
-      if (existingUsers.length > 0) {
-        res.status(409).json({
-          errors: 'User Already Exists please login',
-        })
-        return
-      }
-
-      const [newUser] = await db
-        .insert(userTable)
-        .values({
-          name,
-          email,
-          password: hashedPassword,
-          role,
-        })
-        .returning({
-          id: userTable.id,
-          userName: userTable.name,
-          email: userTable.email,
-          role: userTable.role,
-        })
-
-      if (!newUser) {
-        res.status(400).json({
-          message: 'User not created error encountered',
-        })
-        return
-      }
-
-      generateToken(res, newUser.id, newUser.role)
-
-      res.status(201).json({
-        message: 'Successfully created user',
-        newUser,
-      })
-    } catch (e) {
-      next(e)
-    }
-  },
-)
-
-export const login = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const parsed = LoginSchema.safeParse(req.body)
-
-    if (!parsed.success) {
-      res.status(400).json({
-        errors: 'Invalid Payload',
-        details: parsed.error,
-      })
-      return
-    }
-
-    try {
-      const { email, password } = parsed.data
-
-      const [user] = await db
-        .select()
-        .from(userTable)
-        .where(eq(userTable.email, email))
-        .limit(1)
-
-      if (!user) {
-        res.status(401).json({ errors: 'Invalid email or password' })
-        return
-      }
-
-      const isPasswordValid = await bcrypt.compare(password, user.password)
-
-      if (!isPasswordValid) {
-        res.status(401).json({ errors: 'Invalid email or password' })
-        return
-      }
-
-      generateToken(res, user.id, user.role)
-
-      res.status(200).json({
-        message: 'Successfully logged in',
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        },
-      })
-    } catch (e) {
-      next(e)
-    }
-  },
-)
-
-export const logoutUser = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const isSecureCookie = process.env.NODE_ENV !== 'development'
-
-    res.cookie('access_token', '', {
-      httpOnly: true,
-      secure: isSecureCookie,
-      sameSite: 'strict',
-      expires: new Date(0),
+  const [newUser] = await db
+    .insert(userTable)
+    .values({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+    })
+    .returning({
+      id: userTable.id,
+      userName: userTable.name,
+      email: userTable.email,
+      role: userTable.role,
     })
 
-    res.cookie('refresh_token', '', {
-      httpOnly: true,
-      secure: isSecureCookie,
-      sameSite: 'strict',
-      expires: new Date(0),
-    })
+  if (!newUser) {
+    throw new DatabaseError('User creation failed')
+  }
 
-    res.status(200).json({
-      message: 'User logged out successfully',
-    })
-  },
-)
+  generateToken(res, newUser.id, newUser.role)
+
+  res.respond(newUser)
+})
+
+export const login = catchErrors(async (req: Request, res: Response) => {
+  const { email, password } = await validateOrThrow(LoginSchema, req.body)
+
+  const [user] = await db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.email, email))
+    .limit(1)
+
+  if (!user) {
+    throw new UnauthorizedError()
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password)
+
+  if (!isPasswordValid) {
+    throw new UnauthorizedError()
+  }
+
+  generateToken(res, user.id, user.role)
+
+  res.respond(user)
+})
+
+export const logoutUser = catchErrors(async (_req: Request, res: Response) => {
+  const isSecureCookie = process.env.NODE_ENV !== 'development'
+
+  const cookieOptions = {
+    httpOnly: true,
+    secure: isSecureCookie,
+    sameSite: 'strict' as const,
+    expires: new Date(0),
+  }
+
+  res.cookie('access_token', '', cookieOptions)
+  res.cookie('refresh_token', '', cookieOptions)
+
+  res.respond({
+    message: 'User logged out successfully',
+  })
+})
