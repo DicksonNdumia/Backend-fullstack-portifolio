@@ -75,17 +75,26 @@ export const devData = pgTable('devData', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
-export const Devlanguages = pgTable('devLanguage', {
-  id: serial('id').primaryKey(),
-  name: varchar('name', { length: 255 }).notNull(),
-  proficiency: languageEnums('proficiency').default('beginner').notNull(),
-  experience: text('experience').notNull(),
-  userId: integer('userId')
-    .references(() => devData.id)
-    .notNull(),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-})
+export const Devlanguages = pgTable(
+  'devLanguage',
+  {
+    id: serial('id').primaryKey(),
+    name: varchar('name', { length: 255 }).notNull(),
+    proficiency: languageEnums('proficiency').default('beginner').notNull(),
+    experience: text('experience').notNull(),
+    userId: integer('userId')
+      .references(() => devData.id, { onDelete: 'cascade' })
+      .notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (table) => ({
+    uniqueLanguagePerUser: index('dev_language_user_name_idx').on(
+      table.userId,
+      table.name,
+    ),
+  }),
+)
 export const languages = pgTable('languages', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
