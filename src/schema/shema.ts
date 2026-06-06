@@ -8,7 +8,7 @@ import {
   varchar,
   index,
 } from 'drizzle-orm/pg-core'
-import { Many, relations } from 'drizzle-orm'
+import { relations } from 'drizzle-orm'
 
 // Enums
 export const userRole = pgEnum('role', ['admin', 'user'])
