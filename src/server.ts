@@ -22,7 +22,7 @@ app.use(limiter)
 app.use(addRespondToResponse)
 
 app.use('/api/auth', authRoutes)
-app.use('/api/dev/data', devRoutes)
+app.use('/api/dev/', devRoutes)
 app.use('/api/dev/language', devLanguage)
 
 app.use((req, _res, next) => next(new RouteNotFoundError(req.originalUrl)))

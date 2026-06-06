@@ -148,6 +148,13 @@
       "when": 1780767049532,
       "tag": "0020_green_aqueduct",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1780770915515,
+      "tag": "0021_abandoned_stingray",
+      "breakpoints": true
     }
   ]
 }

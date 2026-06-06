@@ -5,7 +5,7 @@ import { userIdSchema } from '../validation/user'
 import { DevlanguageDataSchema } from '../validation/language.validation'
 import { db } from '../config/config.db'
 import { Devlanguages } from '../schema/shema'
-import { asc, eq } from 'drizzle-orm'
+import { and, asc, eq } from 'drizzle-orm'
 
 export const addDevLanguages = catchErrors(
   async (req: Request, res: Response) => {
@@ -15,15 +15,23 @@ export const addDevLanguages = catchErrors(
       DevlanguageDataSchema,
       req.body,
     )
+    const normalizedName = name.trim().toLowerCase()
 
     const [existingLanguage] = await db
       .select()
       .from(Devlanguages)
-      .where(eq(Devlanguages.name, name))
+      .where(
+        and(
+          eq(Devlanguages.name, normalizedName),
+          eq(Devlanguages.userId, userId),
+        ),
+      )
       .limit(1)
 
     if (existingLanguage) {
-      throw new ConflictError('Language with that name already Exists')
+      throw new ConflictError(
+        'Language with that name for the user already Exists',
+      )
     }
 
     const [addNewDeveloperLanguage] = await db
@@ -52,7 +60,7 @@ export const getDevLanguages = catchErrors(
       orderBy: (table, { asc }) => asc(table.createdAt),
     })
 
-    if (!language) {
+    if (language.length === 0) {
       throw new NotFoundError('Developer Language was not found')
     }
 

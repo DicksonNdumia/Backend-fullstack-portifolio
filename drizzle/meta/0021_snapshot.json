@@ -1,6 +1,6 @@
 {
-  "id": "6655cff4-49a0-4970-9bc6-1bd6a06d7984",
-  "prevId": "b1087bce-d821-474e-8e73-e1f440cd7bc6",
+  "id": "63b4a2d3-987c-4758-8749-ea23919f7a54",
+  "prevId": "6655cff4-49a0-4970-9bc6-1bd6a06d7984",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -38,7 +38,7 @@
           "name": "userId",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -61,8 +61,12 @@
           "name": "devLanguage_userId_devData_id_fk",
           "tableFrom": "devLanguage",
           "tableTo": "devData",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -122,8 +126,12 @@
           "name": "blogComments_userId_users_id_fk",
           "tableFrom": "blogComments",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -131,8 +139,12 @@
           "name": "blogComments_blogId_blogs_id_fk",
           "tableFrom": "blogComments",
           "tableTo": "blogs",
-          "columnsFrom": ["blogId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "blogId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -192,8 +204,12 @@
           "name": "blogs_userId_users_id_fk",
           "tableFrom": "blogs",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -271,8 +287,12 @@
           "name": "devData_userId_users_id_fk",
           "tableFrom": "devData",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -282,12 +302,16 @@
         "devData_email_unique": {
           "name": "devData_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         },
         "devData_phone_unique": {
           "name": "devData_phone_unique",
           "nullsNotDistinct": false,
-          "columns": ["phone"]
+          "columns": [
+            "phone"
+          ]
         }
       },
       "policies": {},
@@ -419,8 +443,12 @@
           "name": "projectReviews_userId_users_id_fk",
           "tableFrom": "projectReviews",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -428,8 +456,12 @@
           "name": "projectReviews_projectId_projects_id_fk",
           "tableFrom": "projectReviews",
           "tableTo": "projects",
-          "columnsFrom": ["projectId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "projectId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -531,8 +563,12 @@
           "name": "projects_toolId_tools_id_fk",
           "tableFrom": "projects",
           "tableTo": "tools",
-          "columnsFrom": ["toolId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "toolId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -540,8 +576,12 @@
           "name": "projects_userId_users_id_fk",
           "tableFrom": "projects",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -549,8 +589,12 @@
           "name": "projects_languageId_languages_id_fk",
           "tableFrom": "projects",
           "tableTo": "languages",
-          "columnsFrom": ["languageId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "languageId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -611,7 +655,9 @@
         "tools_name_unique": {
           "name": "tools_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
@@ -707,7 +753,9 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -719,12 +767,19 @@
     "public.proficiency": {
       "name": "proficiency",
       "schema": "public",
-      "values": ["beginner", "intermediate", "expert"]
+      "values": [
+        "beginner",
+        "intermediate",
+        "expert"
+      ]
     },
     "public.role": {
       "name": "role",
       "schema": "public",
-      "values": ["admin", "user"]
+      "values": [
+        "admin",
+        "user"
+      ]
     }
   },
   "schemas": {},
