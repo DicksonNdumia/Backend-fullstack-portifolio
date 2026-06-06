@@ -8,7 +8,7 @@ import {
   varchar,
   index,
 } from 'drizzle-orm/pg-core'
-import { relations } from 'drizzle-orm'
+import { Many, relations } from 'drizzle-orm'
 
 // Enums
 export const userRole = pgEnum('role', ['admin', 'user'])
@@ -75,11 +75,21 @@ export const devData = pgTable('devData', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
-export const languages = pgTable('languages', {
+export const Devlanguages = pgTable('devLanguage', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   proficiency: languageEnums('proficiency').default('beginner').notNull(),
   experience: text('experience').notNull(),
+  userId: integer('userId')
+    .references(() => devData.id)
+    .notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+})
+export const languages = pgTable('languages', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
@@ -142,12 +152,13 @@ export const userTableRelation = relations(userTable, ({ one, many }) => {
   }
 })
 
-export const devDataRelations = relations(devData, ({ one }) => {
+export const devDataRelations = relations(devData, ({ one, many }) => {
   return {
     user: one(userTable, {
       fields: [devData.userId],
       references: [userTable.id],
     }),
+    language: many(Devlanguages),
   }
 })
 
@@ -181,6 +192,15 @@ export const toolRelations = relations(toolsTable, ({ many }) => {
 export const languageRelations = relations(languages, ({ many }) => {
   return {
     projects: many(projectTable),
+  }
+})
+
+export const devlanguageRelations = relations(Devlanguages, ({ one }) => {
+  return {
+    devLanguage: one(devData, {
+      fields: [Devlanguages.userId],
+      references: [devData.id],
+    }),
   }
 })
 

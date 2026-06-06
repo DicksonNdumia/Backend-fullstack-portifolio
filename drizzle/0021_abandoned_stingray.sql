@@ -1,0 +1,1 @@
+ALTER TABLE "devLanguage" ALTER COLUMN "userId" SET NOT NULL;
