@@ -4,11 +4,10 @@ export const listDevDataSchema = z.object({
   limit: z.coerce.number().int().max(100).optional(),
 })
 
-export const idSchema = z.coerce.number().int().positive()
-
 export const userIdSchema = z.object({
   userId: z.coerce.number().int().positive(),
 })
+export const idSchema = z.coerce.number().int().positive()
 
 export const devDataSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),

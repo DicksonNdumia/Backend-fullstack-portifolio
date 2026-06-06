@@ -7,12 +7,10 @@ import {
   listDevDataSchema,
 } from '../validation/user.ts'
 import { db } from '../config/config.db.ts'
-import { devData, userTable } from '../schema/shema.ts'
+import { devData, Devlanguages, userTable } from '../schema/shema.ts'
 import { eq } from 'drizzle-orm'
 import { NotFoundError, ConflictError } from '../error/customError.ts'
 import { validateOrThrow } from '../utils/helper/validate.ts'
-
-const MAX_LIMIT = 100
 
 export const devDetails = catchErrors(async (req: Request, res: Response) => {
   const { userId } = await validateOrThrow(userIdSchema, req.params)
@@ -68,17 +66,9 @@ export const devDetails = catchErrors(async (req: Request, res: Response) => {
 export const getDevDetails = catchErrors(
   async (req: Request, res: Response) => {
     const id = await validateOrThrow(idSchema, req.params.id)
+    console.log('This is the Id', id)
 
-    const { limit = 50 } = await validateOrThrow(listDevDataSchema, req.query)
-
-    const safeLimit = Math.min(limit, MAX_LIMIT)
-
-    const [user] = await db
-      .select()
-      .from(devData)
-      .where(eq(devData.id, id))
-      .limit(safeLimit)
-
+    const [user] = await db.select().from(devData).where(eq(devData.id, id))
     if (!user) {
       throw new NotFoundError('Dev Data was not found')
     }
