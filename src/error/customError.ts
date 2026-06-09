@@ -1,4 +1,4 @@
-type ErrorData = { [key: string]: any }
+type ErrorData = Record<string, unknown>
 
 export class CustomError extends Error {
   constructor(
@@ -7,7 +7,8 @@ export class CustomError extends Error {
     public status: number = 500,
     public data: ErrorData = {},
   ) {
-    super()
+    super(message)
+    this.name = this.constructor.name
   }
 }
 
@@ -35,7 +36,7 @@ export class UserAlreadyExistsError extends CustomError {
 }
 export class UserNotFound extends CustomError {
   constructor(message = 'User Not Found') {
-    super(message, 'USER_MISSing', 400)
+    super(message, 'USER_NOT_FOUND', 404)
   }
 }
 
