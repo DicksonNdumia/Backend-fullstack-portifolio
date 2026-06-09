@@ -48,7 +48,7 @@ export const addDevLanguages = catchErrors(
         experience: Devlanguages.experience,
       })
 
-    res.respond(addNewDeveloperLanguage)
+    res.respond(addNewDeveloperLanguage, 201)
   },
 )
 

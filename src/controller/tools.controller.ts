@@ -26,13 +26,13 @@ export const addTools = catchErrors(async (req: Request, res: Response) => {
   const [addNewTool] = await db
     .insert(toolsTable)
     .values({
-      name,
-      description,
-      image,
+      name: normalizedName,
+      description: description.trim(),
+      image: image.trim(),
     })
     .returning()
 
-  res.respond(addNewTool)
+  res.respond(addNewTool, 201)
 })
 
 export const getTools = catchErrors(async (req: Request, res: Response) => {
