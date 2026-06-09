@@ -5,7 +5,7 @@ import { userIdSchema } from '../validation/user'
 import { DevlanguageDataSchema } from '../validation/language.validation'
 import { db } from '../config/config.db'
 import { Devlanguages } from '../schema/shema'
-import { and, asc, eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 
 export const addDevLanguages = catchErrors(
   async (req: Request, res: Response) => {
@@ -48,7 +48,7 @@ export const addDevLanguages = catchErrors(
         experience: Devlanguages.experience,
       })
 
-    res.respond(addNewDeveloperLanguage)
+    res.respond(addNewDeveloperLanguage, 201)
   },
 )
 

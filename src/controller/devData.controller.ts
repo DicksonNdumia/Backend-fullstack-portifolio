@@ -60,7 +60,7 @@ export const devDetails = catchErrors(async (req: Request, res: Response) => {
       createdAt: devData.createdAt,
     })
 
-  res.respond({ createdDevProfile })
+  res.respond(createdDevProfile, 201)
 })
 
 export const getDevDetails = catchErrors(
@@ -74,5 +74,22 @@ export const getDevDetails = catchErrors(
     }
 
     res.respond(user)
+  },
+)
+
+export const deleteDevDetails = catchErrors(
+  async (req: Request, res: Response) => {
+    const id = await validateOrThrow(idSchema, req.params.id)
+
+    const deleteUser = await db
+      .delete(devData)
+      .where(eq(devData.id, id))
+      .returning({ deletedUserId: devData.id })
+
+    if (deleteUser.length === 0) {
+      throw new NotFoundError(`Dev Data was bot Found`)
+    }
+
+    res.respond(deleteUser)
   },
 )
