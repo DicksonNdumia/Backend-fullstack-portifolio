@@ -76,3 +76,16 @@ export const getDevDetails = catchErrors(
     res.respond(user)
   },
 )
+
+export const deleteDevDetails = catchErrors(
+  async (req: Request, res: Response) => {
+    const id = await validateOrThrow(idSchema, req.params.id)
+
+    const deleteUser = await db
+      .delete(devData)
+      .where(eq(devData.id, id))
+      .returning({ deletedUserId: devData.id })
+
+    res.respond(deleteUser)
+  },
+)

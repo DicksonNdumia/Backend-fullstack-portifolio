@@ -9,6 +9,7 @@ import { addRespondToResponse } from './middleware/res/response.ts'
 import authRoutes from './routes/auth.routes.ts'
 import devRoutes from './routes/devData.routes.ts'
 import devLanguage from './routes/devLanguage.routes.ts'
+import toolsRoutes from './routes/tools.routes.ts'
 import { RouteNotFoundError } from './error/customError.ts'
 
 const app = express()
@@ -24,6 +25,7 @@ app.use(addRespondToResponse)
 app.use('/api/auth', authRoutes)
 app.use('/api/dev/', devRoutes)
 app.use('/api/dev/language', devLanguage)
+app.use('/api/v1/tools', toolsRoutes)
 
 app.use((req, _res, next) => next(new RouteNotFoundError(req.originalUrl)))
 app.use(handleError)
