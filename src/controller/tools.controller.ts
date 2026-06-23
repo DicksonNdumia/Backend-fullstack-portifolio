@@ -34,7 +34,6 @@ export const addTools = catchErrors(async (req: Request, res: Response) => {
 
   res.respond(addNewTool, 201)
 })
-
 export const getTools = catchErrors(async (req: Request, res: Response) => {
   const tools = await db.query.toolsTable.findMany({
     columns: {

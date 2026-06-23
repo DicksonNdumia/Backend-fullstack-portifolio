@@ -55,7 +55,7 @@ export const projectTable = pgTable('projects', {
     .notNull(),
   userId: integer('userId').references(() => userTable.id),
   languageId: integer('languageId')
-    .references(() => languages.id, { onDelete: 'cascade' })
+    .references(() => Devlanguages.id, { onDelete: 'cascade' })
     .notNull(),
   features: text('features').notNull(),
   hostingPlatforms: varchar('hostingPlatform', { length: 255 }).notNull(),
