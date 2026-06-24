@@ -169,6 +169,13 @@
       "when": 1782218030121,
       "tag": "0023_great_stark_industries",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1782283806901,
+      "tag": "0024_polite_tyrannus",
+      "breakpoints": true
     }
   ]
 }
