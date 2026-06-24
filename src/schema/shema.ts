@@ -19,6 +19,7 @@ export const languageEnums = pgEnum('proficiency', [
 ])
 
 //My schema / Tables
+// +. Controller Done
 export const userTable = pgTable(
   'users',
   {
@@ -35,6 +36,7 @@ export const userTable = pgTable(
     roleIndex: index('role_idx').on(table.role),
   }),
 )
+// +. Controller Done
 export const toolsTable = pgTable('tools', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).unique().notNull(),
@@ -43,6 +45,7 @@ export const toolsTable = pgTable('tools', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
+// +. Controller Done
 export const projectTable = pgTable('projects', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
@@ -62,6 +65,7 @@ export const projectTable = pgTable('projects', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
+// +. Controller Done
 export const devData = pgTable('devData', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
@@ -75,6 +79,7 @@ export const devData = pgTable('devData', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
+// +. Controller Done
 export const Devlanguages = pgTable(
   'devLanguage',
   {
@@ -95,6 +100,7 @@ export const Devlanguages = pgTable(
     ),
   }),
 )
+
 export const languages = pgTable('languages', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
@@ -102,11 +108,14 @@ export const languages = pgTable('languages', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
+// +. Controller Done
 export const blogData = pgTable('blogs', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   description: varchar('description', { length: 255 }).notNull(),
-  userId: integer('userId').references(() => userTable.id),
+  userId: integer('userId')
+    .notNull()
+    .references(() => userTable.id),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
