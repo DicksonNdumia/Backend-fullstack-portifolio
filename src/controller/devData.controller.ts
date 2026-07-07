@@ -66,7 +66,7 @@ export const devDetails = catchErrors(async (req: Request, res: Response) => {
 export const getDevDetails = catchErrors(
   async (req: Request, res: Response) => {
     const id = await validateOrThrow(idSchema, req.params.id)
-    console.log('This is the Id', id)
+    //console.log('This is the Id', id)
 
     const [user] = await db.select().from(devData).where(eq(devData.id, id))
     if (!user) {
