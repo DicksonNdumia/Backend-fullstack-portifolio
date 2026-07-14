@@ -25,6 +25,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+      - name: Run tests
+        run: npm test
 
       - name: Hello from Sports Api
         run: echo "Hello from My portfolio🤞🤞"
