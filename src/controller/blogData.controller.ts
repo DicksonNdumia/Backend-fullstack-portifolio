@@ -45,11 +45,35 @@ export const createBlog = catchErrors(
     res.respond(newBlog, 201)
   },
 )
-export const getBlogs = catchErrors(async (req: UserRequest, res: Response) => {
-  const blogs = await db.select().from(blogData)
+export const getBlogs = catchErrors(
+  async (_req: UserRequest, res: Response) => {
+    const blogs = await db.query.blogData.findMany({
+      with: {
+        user: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        comments: {
+          with: {
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    })
 
-  res.respond(blogs)
-})
+    res.respond(blogs)
+  },
+)
+
 export const getBlogById = catchErrors(
   async (req: UserRequest, res: Response) => {
     const userId = req.user?.id
@@ -60,10 +84,30 @@ export const getBlogById = catchErrors(
 
     const blogId = Number(req.params.id)
 
-    const [blog] = await db
-      .select()
-      .from(blogData)
-      .where(and(eq(blogData.id, blogId), eq(blogData.userId, userId)))
+    const blog = await db.query.blogData.findFirst({
+      where: (blog, { and, eq }) =>
+        and(eq(blog.id, blogId), eq(blog.userId, userId)),
+      with: {
+        user: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        comments: {
+          with: {
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    })
 
     if (!blog) {
       throw new NotFoundError('Blog not found')
