@@ -88,10 +88,10 @@ export const updateTool = catchErrors(
       .where(eq(toolsTable.id, toolId))
       .returning()
 
-    if (!updateTool) {
+    if (!updatedTool) {
       throw new NotFoundError('Project Not Found!')
     }
-    res.respond(updateTool)
+    res.respond(updatedTool)
   },
 )
 
