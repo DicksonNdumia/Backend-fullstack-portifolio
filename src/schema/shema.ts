@@ -100,7 +100,7 @@ export const Devlanguages = pgTable(
     ),
   }),
 )
-
+// +. Controller Done
 export const languages = pgTable('languages', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
@@ -119,6 +119,7 @@ export const blogData = pgTable('blogs', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
+// +. Controller Done
 export const blogComments = pgTable('blogComments', {
   id: serial('id').primaryKey(),
   comment: text('comment').notNull(),
@@ -131,6 +132,7 @@ export const blogComments = pgTable('blogComments', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
+// +. Controller Done
 export const projectReviews = pgTable(
   'projectReviews',
   {

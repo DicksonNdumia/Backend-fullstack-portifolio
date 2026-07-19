@@ -13,6 +13,7 @@ import toolsRoutes from './routes/tools.routes.ts'
 import projectRoutes from './routes/project.routes.ts'
 import blogDataRoutes from './routes/blogData.routes.ts'
 import BlogCommentRoutes from './routes/blogComment.routes.ts'
+import ReviewCommentRoutes from './routes/projectReviews.routes.ts'
 import { RouteNotFoundError } from './error/customError.ts'
 
 const app = express()
@@ -32,6 +33,7 @@ app.use('/api/v1/tools', toolsRoutes)
 app.use('/api/v1/projects', projectRoutes)
 app.use('/api/v1/blogData', blogDataRoutes)
 app.use('/api/v1/blogComment', BlogCommentRoutes)
+app.use('/api/v1/reviews', ReviewCommentRoutes)
 
 app.use((req, _res, next) => next(new RouteNotFoundError(req.originalUrl)))
 app.use(handleError)
